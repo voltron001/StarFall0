@@ -4,8 +4,8 @@ from openai import OpenAI
 # Show title and description.
 st.title("💬 Chatbot")
 st.write(
-    "This is a simple chatbot that uses OpenAI's GPT-3.5 model to generate responses. "
-    "To use this app, you need to provide an OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys). "
+    "This is a simple chatbot that uses OpenAI's GPT-3.5 model to generate responses. "+
+    "To use this app, you need to provide an OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys). "+
     "You can also learn how to build this app step by step by [following our tutorial](https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps)."
 )
 
@@ -49,8 +49,37 @@ else:
             stream=True,
         )
 
-        # Stream the response to the chat using `st.write_stream`, then store it in 
-        # session state.
+        # Stream the response into a placeholder (st.empty) and save the final text.
         with st.chat_message("assistant"):
-            response = st.write_stream(stream)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+            placeholder = st.empty()
+            partial = ""
+            try:
+                for chunk in stream:
+                    # Handle common dict-based streaming chunks (openai-python style)
+                    if isinstance(chunk, dict):
+                        for choice in chunk.get("choices", []):
+                            delta = choice.get("delta", {})
+                            content = delta.get("content")
+                            if content:
+                                partial += content
+                                placeholder.markdown(partial)
+                    else:
+                        # Fallback: try attribute access if the stream yields objects
+                        try:
+                            choices = getattr(chunk, "choices", None)
+                            if choices:
+                                for choice in choices:
+                                    delta = getattr(choice, "delta", None)
+                                    if delta is not None:
+                                        content = getattr(delta, "content", None)
+                                        if content:
+                                            partial += content
+                                            placeholder.markdown(partial)
+                        except Exception:
+                            # If extraction fails for a chunk, skip it but continue streaming
+                            continue
+            except Exception as e:
+                st.error(f"Streaming failed: {e}")
+
+        # Store the assistant response in session state so it persists across reruns.
+        st.session_state.messages.append({"role": "assistant", "content": partial})
