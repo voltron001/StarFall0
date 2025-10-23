@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SilentWind Pitch Deck</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .deck-container {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            padding: 60px 80px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 14px;
+            color: #64ffda;
+            font-weight: 600;
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #64ffda;
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            font-size: 54px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #64ffda 0%, #4dd0e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 42px;
+            margin-bottom: 30px;
+            color: #64ffda;
+        }
+
+        h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #4dd0e1;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: #8892b0;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .bullet-list {
+            font-size: 22px;
+            line-height: 2;
+            color: #ccd6f6;
+        }
+
+        .bullet-list li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .bullet-list li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #64ffda;
+            font-weight: bold;
+        }
+
+        .highlight-box {
+            background: rgba(100, 255, 218, 0.1);
+            border-left: 4px solid #64ffda;
+            padding: 25px 30px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: rgba(100, 255, 218, 0.05);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #64ffda;
+        }
+
+        .card h4 {
+            color: #64ffda;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: #8892b0;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            font-size: 18px;
+        }
+
+        th {
+            background: rgba(100, 255, 218, 0.2);
+            padding: 15px;
+            text-align: left;
+            color: #64ffda;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+            color: #ccd6f6;
+        }
+
+        tr:hover {
+            background: rgba(100, 255, 218, 0.05);
+        }
+
+        .checkmark {
+            color: #64ffda;
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .metric-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #64ffda;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 18px;
+            color: #8892b0;
+        }
+
+        .nav-buttons {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(100, 255, 218, 0.2);
+            border: 2px solid #64ffda;
+            color: #64ffda;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #64ffda;
+            color: #0a0e27;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .contact-btn {
+            background: linear-gradient(135deg, #64ffda, #4dd0e1);
+            border: none;
+            color: #0a0e27;
+            padding: 18px 48px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 12px;
+            margin-top: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(100, 255, 218, 0.3);
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 30px rgba(100, 255, 218, 0.5);
+        }
+
+        .contact-info {
+            font-size: 24px;
+            color: #64ffda;
+            margin-top: 20px;
+        }
+
+        .founder-info {
+            font-size: 20px;
+            color: #8892b0;
+            margin: 10px 0;
+        }
+
+        .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .use-of-funds {
+            margin-top: 30px;
+        }
+
+        .fund-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .fund-bar {
+            flex: 1;
+            height: 40px;
+            background: rgba(100, 255, 218, 0.2);
+            border-radius: 8px;
+            margin-left: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fund-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #64ffda, #4dd0e1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            transition: width 1s ease-out;
+        }
+
+        .title-slide {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            font-size: 72px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="deck-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide" data-slide="1">
+            <div class="logo">SILENTWIND</div>
+            <div class="content">
+                <h1>SilentWind</h1>
+                <div class="subtitle">End-to-End Encrypted Communication<br>for the Modern World</div>
+                <div class="founder-info" style="margin-top: 60px;">
+                    <strong>Founder:</strong> Alex Arda Akyuz, M.S.<br>
+                    <strong>Location:</strong> Detroit, MI
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Problem -->
+        <div class="slide" data-slide="2">
+            <div class="logo">SILENTWIND</div>
+            <div class="slide-number">02</div>
+            <div class="content">
+                <h2>Problem</h2>
+                <h3>Privacy in digital communication is broken.</h3>
+                <ul class="bullet-list">
+                    <li>Messaging apps routinely collect metadata and user data</li>
+                    <li>Governments, advertisers, and hackers exploit weak security</li>
+                    <li>Over 70% of users believe their private chats aren't truly private</li>
+                    <li>Businesses face data leaks and compliance risks due to insecure channels</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 3: Solution -->
+        <div class="slide" data-slide="3">
+            <div class="logo">SILENTWIND</div>
+            <div class="slide-number">03</div>
+            <div class="content">
+                <h2>Solution</h2>
+                <p class="subtitle">SilentWind provides unbreakable end-to-end encrypted messaging — built on a zero-knowledge architecture where no one, not even us, can access user content.</p>
+                <div class="highlight-box">
+                    <h3>🔒 Key Differentiators:</h3>
+                    <ul class="bullet-list">
+                        <li>Zero metadata retention</li>
+                        <li>Decentralized server nodes for global resilience</li>
+                        <li>Self-destructing messages and device-level key storage</li>
+                        <li>No phone number or email required for signup</li>
+                    </ul>
+                </div>
+                <p style="font-size: 28px; color: #64ffda; margin-top: 30px; text-align: center;">Your data belongs only to you.</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: Product Overview -->
+        <div class="slide" data-slide="4">
+            <div class="logo">SILENTWIND</div>
+            <div class="slide-number">04</div>
+            <div class="content">
+                <h2>Product Overview</h2>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>SilentWind App</h4>
+                        <ul class="bullet-list" style="font-size: 18px;">
+                            <li>Secure text, voice, and file sharing</li>
+                            <li>Biometric authentication & hardware encryption</li>
+                            <li>Cross-platform: Windows, Android, iOS, Web</li>
+                            <li>Seamless UX—privacy without complexity</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Future Features</h4>
+                        <ul class="bullet-list" style="font-size: 18px;">
+                            <li>Encrypted group collaboration</li>
+                            <li>Secure video meetings</li>
+                            <li>Enterprise API for corporate integration</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Market Opportunity -->
+        <div class="slide" data-slide="5">
+            <div class="logo">SILENTWIND</div>
+            <div class="slide-number">05</div>
+            <div class="content">
+                <h2>Market Opportunity</h2>
+                <div class="stat-grid">
+                    <div class="metric">
+                        <div class="metric-value">$7.5B</div>
+                        <div class="metric-label">Global Secure Messaging Market (2025)</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">14.6%</div>
+                        <div class="metric-label">Projected CAGR</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">$15B+</div>
+                        <div class="metric-label">TAM by 2030</div>
+                    </div>
+                </div>
+                <h3 style="margin-top: 50px;">Target Segments:</h3>
+                <ul class="bullet-list">
+                    <li>Consumers concerned with digital privacy</li>
+                    <li>Enterprises needing secure internal communications</li>
+                    <li>Journalists, activists, and professionals handling sensitive data</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 6: Business Model -->
+        <div class="slide" data-slide="6">
+            <div class="logo">SILENTWIND</div>
+            <div class="slide-number">06</div>
+            <div class="content">
+                <h2>Business Model</h2>
+                <h3>Freemium + Enterprise Model</h3>
+                <div class="grid-3">
+                    <div class="card">
+                        <h4>Free Tier</h4>
+                        <p>Personal messaging with limited storage and core features</p>
+                    </div>
+                    <div class="card">
+                        <h4>Premium - $5/mo</h4>
+                        <p>Advanced privacy tools and secure backup</p>
+                    </div>
+                    <div class="card">
+                        <h4>Enterprise - $15/user/mo</h4>
+                        <p>Admin controls, integration API, SOC2 compliance</p>
+                    </div>
+                </div>
+                <div style="margin-top: 40px;">
+                    <h3>Projected Revenue Streams:</h3>
+                    <ul class="bullet-list">
+                        <li>Subscriptions</li>
+                        <li>Enterprise SaaS</li>
+                        <li>Privacy SDK licensing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Traction -->
+        <div class="slide" data-slide="7">
+            <div class="logo">SILENTWIND</div>
+            <div class="slide-number">07</div>
+            <div class="content">
+                <h2>Traction & Validation</h2>
+                <div class="grid-2" style="margin-top: 50px;">
+                    <div class="card">
+                        <div class="checkmark">✓</div>
+                        <h4>MVP in Development</h4>
+                        <p>Currently in idea phase with core architecture designed</p>
+                    </div>
+                    <div class="card">
+                        <div class="checkmark">✓</div>
+                        <h4>Early Interest</h4>
+                        <p>Nearly 500 early users signed up and engaged</p>
+                    </div>
+                    <div class="card">
+                        <div class="checkmark">✓</div>
+                        <h4>Strategic Partnerships</h4>
+                        <p>In discussion with 2 cybersecurity firms</p>
+                    </div>
+                    <div class="card">
+                        <div class="checkmark">✓</div>
+                        <h4>Next Milestone</h4>
+                        <p>Public launch in Q3 2026</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Competition -->
+        <div class="slide" data-slide="8">
+            <div class="logo">SILENTWIND</div>
+            <div class="slide-number">08</div>
+            <div class="content">
+                <h2>Competitive Landscape</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Encryption</th>
+                            <th>Metadata Policy</th>
+                            <th>Open Source</th>
+                            <th>Decentralized</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>WhatsApp</td>
+                            <td>Partial</td>
+                            <td>Collects</td>
+                            <td>No</td>
+                            <td>No</td>
+                        </tr>
+                        <tr>
+                            <td>Signal</td>
+                            <td>Full</td>
+                            <td>Retains metadata</td>
+                            <td>Yes</td>
+                            <td>No</td>
+                        </tr>
+                        <tr>
+                            <td>Telegram</td>
+                            <td>Optional</td>
+                            <td>Retains</td>
+                            <td>Partial</td>
+                            <td>No</td>
+                        </tr>
+                        <tr style="background: rgba(100, 255, 218, 0.1);">
+                            <td><strong>SilentWind</strong></td>
+                            <td><strong>Full</strong></td>
+                            <td><strong>None</strong></td>
+                            <td><strong>Yes</strong></td>
+                            <td><strong>Yes ✓</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 24px; color: #64ffda; margin-top: 40px; text-align: center;">Our Edge: Truly zero-knowledge + decentralized + user anonymity</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Go-To-Market -->
+        <div class="slide" data-slide="9">
+            <div class="logo">SILENTWIND</div>
+            <div class="slide-number">09</div>
+            <div class="content">
+                <h2>Go-To-Market Strategy</h2>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>Phase 1</h4>
+                        <p>Launch & community building (privacy advocates, Reddit, Hacker News)</p>
+                    </div>
+                    <div class="card">
+                        <h4>Phase 2</h4>
+                        <p>Influencer marketing + security podcast partnerships</p>
+                    </div>
+                    <div class="card">
+                        <h4>Phase 3</h4>
+                        <p>B2B outreach to law firms, healthcare, and fintech</p>
+                    </div>
+                    <div class="card">
+                        <h4>Phase 4</h4>
+                        <p>Scale internationally with regional servers</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Financials -->
+        <div class="slide" data-slide="10">
+            <div class="logo">SILENTWIND</div>
+            <div class="slide-number">10</div>
+            <div class="content">
+                <h2>Financial Projections</h2>
+                <h3>3-Year Projection (Base Case)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Users</th>
+                            <th>Revenue</th>
+                            <th>EBITDA Margin</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2026</td>
+                            <td>100K</td>
+                            <td>$600K</td>
+                            <td>-20%</td>
+                        </tr>
+                        <tr>
+                            <td>2027</td>
+                            <td>500K</td>
+                            <td>$3.8M</td>
+                            <td>15%</td>
+                        </tr>
+                        <tr>
+                            <td>2028</td>
+                            <td>1.2M</td>
+                            <td>$10M</td>
+                            <td>30%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 11: The Ask -->
+        <div class="slide" data-slide="11">
+            <div class="logo">SILENTWIND</div>
+            <div class="slide-number">11</div>
+            <div class="content">
+                <h2>The Ask</h2>
+                <div class="highlight-box">
+                    <h3 style="color: #fff;">Seeking: $750,000 Seed Round</h3>
+                    <p style="color: #8892b0; font-size: 20px; margin-top: 10px;">Runway: 18 months</p>
+                </div>
+                <h3 style="margin-top: 40px;">Use of Funds:</h3>
+                <div class="use-of-funds">
+                    <div class="fund-item">
+                        <span style="width: 280px; font-size: 18px;">Product development</span>
+                        <div class="fund-bar">
+                            <div class="fund-fill" style="width: 40%;">40%</div>
+                        </div>
+                    </div>
+                    <div class="fund-item">
+                        <span style="width: 280px; font-size: 18px;">Marketing & partnerships</span>
+                        <div class="fund-bar">
+                            <div class="fund-fill" style="width: 25%;">25%</div>
+                        </div>
+                    </div>
+                    <div class="fund-item">
+                        <span style="width: 280px; font-size: 18px;">Infrastructure & security audits</span>
+                        <div class="fund-bar">
+                            <div class="fund-fill" style="width: 20%;">20%</div>
+                        </div>
+                    </div>
+                    <div class="fund-item">
+                        <span style="width: 280px; font-size: 18px;">Operations & legal</span>
+                        <div class="fund-bar">
+                            <div class="fund-fill" style="width: 15%;">15%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Team -->
+        <div class="slide" data-slide="12">
+            <div class="logo">SILENTWIND</div>
+            <div class="slide-number">12</div>
+            <div class="content">
+                <h2>The Team</h2>
+                <div class="highlight-box" style="margin-top: 30px;">
+                    <h3 style="color: #fff;">Alex Arda Akyuz, M.S. – Founder & CEO</h3>
+                    <ul class="bullet-list" style="margin-top: 20px;">
+                        <li>Cybersecurity & Network Systems Expert</li>
+                        <li>8+ years in IT, information security, and audit</li>
+                        <li>Certified Ethical Hacker (CEH), Cisco Certified (CC)</li>
+                    </ul>
+                </div>
+                <h3 style="margin-top: 50px;">Advisory Board (in formation)</h3>
+                <div class="grid-3" style="margin-top: 20px;">
+                    <div class="card">
+                        <p>Privacy attorney</p>
+                    </div>
+                    <div class="card">
+                        <p>Former CISO at mid-sized SaaS company</p>
+                    </div>
+                    <div class="card">
+                        <p>Blockchain systems architect</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Closing -->
+        <div class="slide title-slide" data-slide="13">
+            <div class="logo">SILENTWIND</div>
+            <div class="slide-number">13</div>
+            <div class="content">
+                <h1>SilentWind</h1>
+                <div class="subtitle" style="font-size: 32px; margin-bottom: 60px;">Redefining trust in digital communication.</div>
+                <a href="mailto:cybertimestoday@gmail.com" style="text-decoration: none;">
+                    <button class="contact-btn">Contact Me</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 13;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            if (n > totalSlides) currentSlide = totalSlides;
+            if (n < 1) currentSlide = 1;
+
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+
+            prevBtn.disabled = currentSlide === 1;
+            nextBtn.disabled = currentSlide === totalSlides;
+
+            // Animate fund bars on slide 11
+            if (currentSlide === 11) {
+                setTimeout(() => {
+                    const fills = document.querySelectorAll('.fund-fill');
+                    fills.forEach(fill => {
+                        fill.style.width = fill.textContent;
+                    });
+                }, 100);
+            }
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Initialize
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
